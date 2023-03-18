@@ -1,4 +1,4 @@
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // import { Loader } from 'components/Loader/Loader';
 
@@ -45,6 +45,14 @@ https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`
             ))}
         </ul>
         <p>Additional information</p>
+        <ul>
+          <li>
+            <Link to="cast">Cast</Link>
+          </li>
+          <li>
+            <Link to="reviews">Reviews</Link>
+          </li>
+        </ul>
         <Outlet />
       </div>
     </main>

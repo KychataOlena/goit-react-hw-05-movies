@@ -7,17 +7,33 @@ const BASE_IMG_URL = 'https://image.tmdb.org/t/p/w500/';
 const Cast = () => {
   const { movieId } = useParams();
   const [cast, setCast] = useState([]);
-  //   console.log(cast);
 
-  //   useEffect(() => {
+  useEffect(() => {
+    fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`
+    )
+      .then(res => res.json())
+      .then(cast => {
+        // console.log(cast.cast);
 
-  //     );
-  //   }, []);
+        cast.cast.map(({ id, name, profile_path, character }) => {
+          const cast = { id, name, profile_path, character };
+          setCast(prevState => [...prevState, cast]);
+        });
+      });
+  });
 
   return (
     <div>
-      {/* <img src={`${BASE_IMG_URL}${poster_path}`} width="100" alt="" /> */}
-      {/* <h1>{title}</h1> */}
+      <ul>
+        {cast.map(({ id, name, profile_path, character }) => (
+          <li key={id}>
+            <img src={`${BASE_IMG_URL}${profile_path}`} width="100" alt="" />
+            <p>{name}</p>
+            <p>Character:{character}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
