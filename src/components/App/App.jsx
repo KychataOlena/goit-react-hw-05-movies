@@ -6,6 +6,7 @@ import MovieDetails from 'pages/MovieDetails/MovieDetails';
 
 import Reviews from 'pages/Reviews/Reviews';
 import Cast from 'pages/Cast/Cast';
+import { ToastContainer } from 'react-toastify';
 
 export const App = () => {
   return (
@@ -28,6 +29,7 @@ export const App = () => {
           <Route path="reviews" element={<Reviews />} />
         </Route>
       </Routes>
+      <ToastContainer />
     </div>
   );
 };

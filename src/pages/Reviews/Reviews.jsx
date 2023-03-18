@@ -13,7 +13,7 @@ const Reviews = () => {
     )
       .then(res => res.json())
       .then(rev => {
-        console.log(rev.results);
+        // console.log(rev.results);
         rev.results.map(({ author, content, id }) => {
           const review = { author, content, id };
           setReviews(prevState => [...prevState, review]);

@@ -21,7 +21,7 @@ const Cast = () => {
           setCast(prevState => [...prevState, cast]);
         });
       });
-  });
+  }, []);
 
   return (
     <div>

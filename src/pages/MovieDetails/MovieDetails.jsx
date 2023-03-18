@@ -1,4 +1,4 @@
-import { Outlet, useParams, Link } from 'react-router-dom';
+import { Outlet, useParams, Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // import { Loader } from 'components/Loader/Loader';
 
@@ -6,9 +6,12 @@ const API_KEY = '37c19565ff9fd1caddc6961e74d76e1e';
 const BASE_IMG_URL = 'https://image.tmdb.org/t/p/w500/';
 
 const MovieDetails = () => {
+  const location = useLocation();
   const { movieId } = useParams();
   const [loading, setLoading] = useState(false);
   const [movie, setMovie] = useState({});
+
+  const backButton = location.state?.from ?? '/';
 
   useEffect(() => {
     // setLoading(true);
@@ -29,6 +32,8 @@ https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`
   const { title, vote_average, poster_path, genres, overview } = movie;
   return (
     <main>
+      <Link to={backButton}>Go back</Link>
+
       <div>
         <img src={`${BASE_IMG_URL}${poster_path}`} width="250" alt="" />
         <h1>{title}</h1>
