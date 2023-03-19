@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
+import { Loader } from 'components/Loader/Loader';
 // import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-const API_KEY = '37c19565ff9fd1caddc6961e74d76e1e';
-const BASE_IMG_URL = 'https://image.tmdb.org/t/p/w500/';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { API_KEY, BASE_IMG_URL } from 'services';
 
-export const Movies = () => {
-  // const { movieId } = useParams();
+const Movies = () => {
   const [movie, setMovie] = useState([]);
   const [searchMovie, setSearchMovie] = useState('');
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query');
@@ -24,10 +26,10 @@ export const Movies = () => {
     event.preventDefault();
 
     if (searchMovie.trim() === '') {
-      toast.error('Заповніть форму');
+      toast.error('Something went wrong!');
       return;
     }
-    const form = event.currentTarget;
+    // const form = event.currentTarget;
     setSearchParams({ query: searchMovie });
 
     setSearchMovie('');
@@ -37,6 +39,7 @@ export const Movies = () => {
     if (query === null) {
       return;
     }
+    setLoading(true);
     setMovie([]);
 
     fetch(
@@ -49,6 +52,9 @@ export const Movies = () => {
           const movie = { id, poster_path, title };
           setMovie(prevState => [...prevState, movie]);
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [query]);
 
@@ -67,6 +73,7 @@ export const Movies = () => {
         ></input>
         <button type="submit">Search</button>
       </form>
+
       <div>
         {movie && (
           <ul>
@@ -74,13 +81,20 @@ export const Movies = () => {
               <li key={id}>
                 <Link to={`${id}`} state={{ from: location }}>
                   <p>{title}</p>
-                  <img src={`${BASE_IMG_URL}${poster_path}`} alt=""></img>
+                  <img
+                    src={`${BASE_IMG_URL}${poster_path}`}
+                    width="150"
+                    alt=""
+                  ></img>
                 </Link>
               </li>
             ))}
           </ul>
         )}
       </div>
+      <ToastContainer autoClose={3000} theme="colored" />
+      {loading && <Loader />}
     </>
   );
 };
+export default Movies;

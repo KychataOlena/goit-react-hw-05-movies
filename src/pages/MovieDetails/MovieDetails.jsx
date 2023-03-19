@@ -1,33 +1,29 @@
 import { Outlet, useParams, Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-// import { Loader } from 'components/Loader/Loader';
-
-const API_KEY = '37c19565ff9fd1caddc6961e74d76e1e';
-const BASE_IMG_URL = 'https://image.tmdb.org/t/p/w500/';
+import { Loader } from 'components/Loader/Loader';
+import { API_KEY, BASE_IMG_URL } from 'services';
+import { Suspense } from 'react';
 
 const MovieDetails = () => {
   const location = useLocation();
   const { movieId } = useParams();
   const [loading, setLoading] = useState(false);
   const [movie, setMovie] = useState({});
-
   const backButton = location.state?.from ?? '/';
 
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     fetch(`
 https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`)
       .then(res => res.json())
       .then(movie => {
         const { title, vote_average, poster_path, genres, overview } = movie;
-        // console.log(genres);
         setMovie({ title, vote_average, poster_path, genres, overview });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [movieId]);
-
-  // if (loading) {
-  //   return <Loader />;
-  // }
 
   const { title, vote_average, poster_path, genres, overview } = movie;
   return (
@@ -35,7 +31,7 @@ https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`
       <Link to={backButton}>Go back</Link>
 
       <div>
-        <img src={`${BASE_IMG_URL}${poster_path}`} width="250" alt="" />
+        <img src={`${BASE_IMG_URL}${poster_path}`} width="150" alt="" />
         <h1>{title}</h1>
         <p>User scor: {vote_average}</p>
         <h2>Overview </h2>
@@ -52,14 +48,21 @@ https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`
         <p>Additional information</p>
         <ul>
           <li>
-            <Link to="cast">Cast</Link>
+            <Link to="cast" state={{ from: backButton }}>
+              Cast
+            </Link>
           </li>
           <li>
-            <Link to="reviews">Reviews</Link>
+            <Link to="reviews" state={{ from: backButton }}>
+              Reviews
+            </Link>
           </li>
         </ul>
-        <Outlet />
+        <Suspense>
+          <Outlet />
+        </Suspense>
       </div>
+      {loading && <Loader />}
     </main>
   );
 };

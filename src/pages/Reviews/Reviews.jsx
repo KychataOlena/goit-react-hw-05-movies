@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-const API_KEY = '37c19565ff9fd1caddc6961e74d76e1e';
+import { API_KEY } from 'services';
 
 const Reviews = () => {
   const { movieId } = useParams();
