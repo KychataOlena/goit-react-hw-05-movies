@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { API_KEY, BASE_IMG_URL } from 'services';
+import { CastList } from './Cast.styled';
 
 const Cast = () => {
   const { movieId } = useParams();
@@ -12,8 +13,6 @@ const Cast = () => {
     )
       .then(res => res.json())
       .then(cast => {
-        // console.log(cast.cast);
-
         const castArray = cast.cast.map(
           ({ id, name, profile_path, character }) => {
             return { id, name, profile_path, character };
@@ -25,7 +24,7 @@ const Cast = () => {
 
   return (
     <div>
-      <ul>
+      <CastList>
         {cast.map(({ id, name, profile_path, character }) => (
           <li key={id}>
             <img src={`${BASE_IMG_URL}${profile_path}`} width="100" alt="" />
@@ -33,7 +32,7 @@ const Cast = () => {
             <p>Character:{character}</p>
           </li>
         ))}
-      </ul>
+      </CastList>
     </div>
   );
 };

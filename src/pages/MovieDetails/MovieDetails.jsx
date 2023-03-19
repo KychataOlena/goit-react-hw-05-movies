@@ -1,8 +1,17 @@
-import { Outlet, useParams, Link, useLocation } from 'react-router-dom';
+import { Outlet, useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Loader } from 'components/Loader/Loader';
 import { API_KEY, BASE_IMG_URL } from 'services';
 import { Suspense } from 'react';
+import {
+  StyledLink,
+  MovieTitle,
+  FlexContainer,
+  MainPoster,
+  MovieDetailsList,
+  CastLink,
+  MovieItem,
+} from 'pages/MovieDetails/MovieDetails.styled';
 
 const MovieDetails = () => {
   const location = useLocation();
@@ -26,38 +35,45 @@ https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`
   }, [movieId]);
 
   const { title, vote_average, poster_path, genres, overview } = movie;
+
   return (
     <main>
-      <Link to={backButton}>Go back</Link>
-
+      <StyledLink to={backButton}>Go back</StyledLink>
       <div>
-        <img src={`${BASE_IMG_URL}${poster_path}`} width="150" alt="" />
-        <h1>{title}</h1>
-        <p>User scor: {vote_average}</p>
-        <h2>Overview </h2>
-        <p>{overview}</p>
-        <h3>Genres </h3>
-        <ul>
-          {genres &&
-            genres.map(({ id, name }) => (
-              <li key={id}>
-                <p>{name}</p>
-              </li>
-            ))}
-        </ul>
-        <p>Additional information</p>
-        <ul>
-          <li>
-            <Link to="cast" state={{ from: backButton }}>
-              Cast
-            </Link>
-          </li>
-          <li>
-            <Link to="reviews" state={{ from: backButton }}>
-              Reviews
-            </Link>
-          </li>
-        </ul>
+        <FlexContainer>
+          <div>
+            <MovieTitle>{title}</MovieTitle>
+            <MainPoster src={`${BASE_IMG_URL}${poster_path}`} alt="Poster" />
+          </div>
+
+          <div>
+            <p>User scor: {vote_average}</p>
+            <h2>Overview </h2>
+            <p>{overview}</p>
+            <h3>Genres</h3>
+            <MovieDetailsList>
+              {genres &&
+                genres.map(({ id, name }) => (
+                  <MovieItem key={id}>
+                    <p>{name}</p>
+                  </MovieItem>
+                ))}
+            </MovieDetailsList>
+            <h3>Additional information</h3>
+            <MovieDetailsList>
+              <MovieItem>
+                <CastLink to="cast" state={{ from: backButton }}>
+                  Cast
+                </CastLink>
+              </MovieItem>
+              <MovieItem>
+                <CastLink to="reviews" state={{ from: backButton }}>
+                  Reviews
+                </CastLink>
+              </MovieItem>
+            </MovieDetailsList>
+          </div>
+        </FlexContainer>
         <Suspense>
           <Outlet />
         </Suspense>

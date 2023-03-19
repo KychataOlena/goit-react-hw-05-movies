@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+
 import { useLocation } from 'react-router-dom';
 import { Loader } from 'components/Loader/Loader';
 import { API_KEY, BASE_IMG_URL } from 'services';
+import {
+  MovieList,
+  MainTitle,
+  FilmName,
+  MovieLink,
+  MovieLi,
+  MovieImg,
+} from 'pages/Home/Home.styled';
 
- const Home = () => {
+const Home = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const [movies, setTrendingMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -15,8 +23,14 @@ import { API_KEY, BASE_IMG_URL } from 'services';
       .then(response => response.json())
       .then(movies => {
         // console.log(movies.results);
-        const ApiArray = movies.results;
-        setTrendingMovies(ApiArray);
+
+        const movieArray = movies.results.map(
+          ({ id, poster_path, title, name }) => {
+            let movieTitle = title || name;
+            return { id, poster_path, movieTitle };
+          }
+        );
+        setMovies(movieArray);
       })
       .finally(() => {
         setLoading(false);
@@ -26,22 +40,22 @@ import { API_KEY, BASE_IMG_URL } from 'services';
 
   return (
     <main>
-      <h1>Trending today</h1>
+      <MainTitle>Trending today</MainTitle>
 
-      <ul>
-        {movies.map(({ id, poster_path, title }) => (
-          <li key={id}>
-            <Link to={`movies/${id}`} state={{ from: location }}>
-              <p>{title}</p>
-              <img
+      <MovieList>
+        {movies.map(({ id, poster_path, movieTitle }) => (
+          <MovieLi key={id}>
+            <MovieLink to={`movies/${id}`} state={{ from: location }}>
+              <MovieImg
                 src={`${BASE_IMG_URL}${poster_path}`}
-                width="150"
-                alt=""
-              ></img>
-            </Link>
-          </li>
+                alt="Movie"
+                width={370}
+              ></MovieImg>
+              <FilmName>{movieTitle}</FilmName>
+            </MovieLink>
+          </MovieLi>
         ))}
-      </ul>
+      </MovieList>
       {loading && <Loader />}
     </main>
   );
