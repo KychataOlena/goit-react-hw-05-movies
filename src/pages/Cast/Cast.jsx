@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { API_KEY, BASE_IMG_URL } from 'services';
 
 const Cast = () => {
@@ -14,12 +14,14 @@ const Cast = () => {
       .then(cast => {
         // console.log(cast.cast);
 
-        cast.cast.map(({ id, name, profile_path, character }) => {
-          const cast = { id, name, profile_path, character };
-          setCast(prevState => [...prevState, cast]);
-        });
+        const castArray = cast.cast.map(
+          ({ id, name, profile_path, character }) => {
+            return { id, name, profile_path, character };
+          }
+        );
+        setCast(castArray);
       });
-  }, []);
+  }, [movieId]);
 
   return (
     <div>

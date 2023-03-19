@@ -14,10 +14,11 @@ const Reviews = () => {
       .then(res => res.json())
       .then(rev => {
         // console.log(rev.results);
-        rev.results.map(({ author, content, id }) => {
-          const review = { author, content, id };
-          setReviews(prevState => [...prevState, review]);
+
+        const review = rev.results.map(({ author, content, id }) => {
+          return { author, content, id };
         });
+        setReviews(review);
       });
   }, [movieId]);
 
